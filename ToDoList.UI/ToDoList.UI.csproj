@@ -58,7 +58,6 @@
     <Compile Include="NewItemWindow.xaml.cs">
       <DependentUpon>NewItemWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ToDoItem.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -101,6 +100,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ToDoList.Data\ToDoList.Data.csproj">
+      <Project>{aea835fe-67e0-4d8e-83ba-efd6b3e430d6}</Project>
+      <Name>ToDoList.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

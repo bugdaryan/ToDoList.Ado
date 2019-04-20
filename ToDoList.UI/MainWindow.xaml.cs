@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using ToDoList.Data.Models;
 
 namespace ToDoList.UI
 {
@@ -131,19 +132,19 @@ namespace ToDoList.UI
             var stackPanel = new StackPanel
             {
                 Width = ToDoListBox.Width * .85,
-                Height = isDescNull ? 100 : 120,
+                Height = isDescNull ? 70 : 90,
                 Background = item.Completed ? Brushes.ForestGreen : Brushes.CadetBlue
             };
             Label labelName = new Label
             {
                 Content = item.Name,
-                FontSize = 23
+                FontSize = 20
             };
 
             Label labelContent = new Label
             {
                 Content = item.Description,
-                FontSize = 16
+                FontSize = 12
             };
             CheckBox checkBox = new CheckBox
             {
@@ -152,7 +153,8 @@ namespace ToDoList.UI
             };
             Label labelPriority = new Label
             {
-                Content = $"Priority: {item.Priority}"
+                Content = $"Priority: {item.Priority}",
+                HorizontalAlignment = HorizontalAlignment.Right
             };
 
             checkBox.Checked += (sender, e) =>
@@ -175,9 +177,13 @@ namespace ToDoList.UI
             {
                 stackPanel.Children.Add(labelContent);
             }
+            var grid = new Grid();
+            grid.Children.Add(labelPriority);
+            grid.Children.Add(checkBox);
 
-            stackPanel.Children.Add(labelPriority);
-            stackPanel.Children.Add(checkBox);
+            //stackPanel.Children.Add(labelPriority);
+            //stackPanel.Children.Add(checkBox);
+            stackPanel.Children.Add(grid);
             borderToId.Add(border, item.Id);
             checkBoxToId.Add(checkBox, item.Id);
             ToDoListBox.Items.Add(border);
