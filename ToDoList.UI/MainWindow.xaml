@@ -5,11 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ToDoList.UI"
         mc:Ignorable="d"
-        Title="ToDo" Height="442.891" Width="506.413">
+        Title="ToDo" Height="587.236" Width="506.413" WindowStartupLocation="CenterScreen">
     <Grid>
-        <ListBox x:Name="ToDoListBox" HorizontalAlignment="Left" Height="345" Margin="10,59,0,0" VerticalAlignment="Top" Width="350"/>
-        <Button x:Name="NewBtn" Content="New" HorizontalAlignment="Left" Margin="377,67,0,0" VerticalAlignment="Top" Width="113" IsDefault="True" Click="NewBtn_Click"/>
-        <Button x:Name="RemoveBtn" Content="Remove" HorizontalAlignment="Left" Margin="377,91,0,0" VerticalAlignment="Top" Width="113" IsEnabled="False" Click="RemoveBtn_Click"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="67*"/>
+            <ColumnDefinition Width="33*"/>
+        </Grid.ColumnDefinitions>
+        <ListBox x:Name="ToDoListBox" HorizontalAlignment="Left" Height="452" Margin="10,59,0,0" VerticalAlignment="Top" Width="350" Grid.ColumnSpan="2"/>
+        <Button x:Name="NewBtn" Content="New" HorizontalAlignment="Left" Margin="41.709,67,0,0" VerticalAlignment="Top" Width="113" IsDefault="True" Click="NewBtn_Click" Grid.Column="1"/>
+        <Button x:Name="RemoveBtn" Content="Remove" HorizontalAlignment="Left" Margin="41.709,91,0,0" VerticalAlignment="Top" Width="113" IsEnabled="False" Click="RemoveBtn_Click" Grid.Column="1"/>
         <Label Content="ToDos" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.394,0.308" Height="44" Width="78" FontSize="24"/>
     </Grid>
 </Window>

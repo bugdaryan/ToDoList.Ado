@@ -24,7 +24,7 @@ namespace ToDoList.UI
 
         public void ReadData()
         {
-            string queryString = "SELECT * FROM ToDoItems";
+            string queryString = "SELECT * FROM ToDoItems ORDER BY Priority DESC";
             using (SqlConnection connection =
             new SqlConnection(connectionString))
             {
@@ -41,7 +41,7 @@ namespace ToDoList.UI
                             Name = reader["Name"].ToString(),
                             Completed = (bool)reader["Completed"],
                             Description = reader["Description"].ToString(),
-                            Priority = Priority.Zero
+                            Priority = (Priority)reader["priority"]
                         };
 
                         NewToDoItem(item);
@@ -55,8 +55,31 @@ namespace ToDoList.UI
             }
         }
 
+        public void WriteData()
+        {
+            string queryString = $"INSERT INTO ToDoItems (Name, Description, Completed, Priority) VALUES ('{NewItem.Name}', '{NewItem.Description}', 0, {(int)NewItem.Priority});";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+
+        public ToDoItem NewItem { get; set; }
+
         public void NewToDoItem(ToDoItem item)
         {
+            var isDescNull = string.IsNullOrEmpty(item.Description) || string.IsNullOrWhiteSpace(item.Description);
             Border border = new Border
             {
                 BorderThickness = new Thickness(4),
@@ -64,8 +87,8 @@ namespace ToDoList.UI
             };
             var stackPanel = new StackPanel
             {
-                Width = ToDoListBox.Width*.85,
-                Height = 120
+                Width = ToDoListBox.Width * .85,
+                Height = isDescNull ? 100 : 120
             };
             Label labelName = new Label
             {
@@ -75,8 +98,8 @@ namespace ToDoList.UI
 
             Label labelContent = new Label
             {
-                 Content = item.Description,
-                 FontSize = 16
+                Content = item.Description,
+                FontSize = 16
             };
             CheckBox checkBox = new CheckBox
             {
@@ -89,8 +112,11 @@ namespace ToDoList.UI
 
             border.Child = stackPanel;
             stackPanel.Children.Add(labelName);
-            if(!string.IsNullOrEmpty (item.Description) && !string.IsNullOrWhiteSpace(item.Description))
+            if (!isDescNull)
+            {
                 stackPanel.Children.Add(labelContent);
+            }
+
             stackPanel.Children.Add(labelPriority);
             stackPanel.Children.Add(checkBox);
 
@@ -99,6 +125,18 @@ namespace ToDoList.UI
 
         private void NewBtn_Click(object sender, RoutedEventArgs e)
         {
+            NewItemWindow newItemWindow = new NewItemWindow();
+            newItemWindow.Show();
+            newItemWindow.Closing += (s, ev) =>
+            {
+                if (newItemWindow.ToDoItem != null)
+                {
+                    NewItem = newItemWindow.ToDoItem;
+
+                    WriteData();
+                    ReadData();
+                }
+            };
         }
 
         private void RemoveBtn_Click(object sender, RoutedEventArgs e)

@@ -1,16 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ToDoList.UI
 {
@@ -19,9 +8,71 @@ namespace ToDoList.UI
     /// </summary>
     public partial class NewItemWindow : Window
     {
+        public ToDoItem ToDoItem { get; private set; }
         public NewItemWindow()
         {
             InitializeComponent();
+            ZeroPriorityRadioButton.IsChecked = true;
+        }
+
+        private void CancelBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void SubmitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (CheckForValidItem())
+            {
+                ToDoItem = new ToDoItem
+                {
+                    Completed = false,
+                    Created = DateTime.Now,
+                    Description = NewTodoDescriptionTextBox.Text,
+                    Name = NewTodoNameTextBox.Text,
+                    Priority = GetToDoPriority()
+                };
+                Close();
+            }
+            else
+            {
+                //TriggerInvalidInput();
+            }
+
+        }
+
+        private Priority GetToDoPriority()
+        {
+            if (ZeroPriorityRadioButton.IsChecked.Value)
+            {
+                return Priority.Zero;
+            }
+
+            if (LowPriorityRadioButton.IsChecked.Value)
+            {
+                return Priority.Low;
+            }
+
+            if (MediumPriorityRadioButton.IsChecked.Value)
+            {
+                return Priority.Medium;
+            }
+
+            if (ImportantPriorityRadioButton.IsChecked.Value)
+            {
+                return Priority.Important;
+            }
+
+            return Priority.Critical;
+        }
+
+        private bool CheckForValidItem()
+        {
+            if (string.IsNullOrEmpty(NewTodoNameTextBox.Text) || string.IsNullOrWhiteSpace(NewTodoNameTextBox.Text))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
