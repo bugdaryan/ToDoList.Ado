@@ -13,6 +13,7 @@ namespace ToDoList.UI
     public partial class MainWindow : Window
     {
         Dictionary<Border, int> borderToId = new Dictionary<Border, int>();
+        Dictionary<CheckBox, int> checkBoxToId = new Dictionary<CheckBox, int>();
         string connectionString =
            "Server=(localdb)\\mssqllocaldb;Database=ToDoList;Trusted_Connection=True;MultipleActiveResultSets=true;";
 
@@ -97,6 +98,25 @@ namespace ToDoList.UI
             }
         }
 
+        public void ChangeItemCompletetion(int id, bool completed)
+        {
+            string queryString = $"UPDATE ToDoItems set Completed = {(completed? 1:0)} WHERE Id = {id};";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
 
         public ToDoItem NewItem { get; set; }
 
@@ -111,7 +131,8 @@ namespace ToDoList.UI
             var stackPanel = new StackPanel
             {
                 Width = ToDoListBox.Width * .85,
-                Height = isDescNull ? 100 : 120
+                Height = isDescNull ? 100 : 120,
+                Background = item.Completed ? Brushes.ForestGreen : Brushes.CadetBlue
             };
             Label labelName = new Label
             {
@@ -126,12 +147,26 @@ namespace ToDoList.UI
             };
             CheckBox checkBox = new CheckBox
             {
-                IsChecked = false,
-                Content = "Is completed? "
+                IsChecked = item.Completed,
+                Content = item.Completed ? "Completed" : "Not completed"
             };
             Label labelPriority = new Label
             {
                 Content = $"Priority: {item.Priority}"
+            };
+
+            checkBox.Checked += (sender, e) =>
+            {
+                var id = checkBoxToId[(CheckBox)sender];
+                ChangeItemCompletetion(id, true);
+                ReadData();
+            };
+
+            checkBox.Unchecked += (sender, e) =>
+            {
+                var id = checkBoxToId[(CheckBox)sender];
+                ChangeItemCompletetion(id, false);
+                ReadData();
             };
 
             border.Child = stackPanel;
@@ -144,6 +179,7 @@ namespace ToDoList.UI
             stackPanel.Children.Add(labelPriority);
             stackPanel.Children.Add(checkBox);
             borderToId.Add(border, item.Id);
+            checkBoxToId.Add(checkBox, item.Id);
             ToDoListBox.Items.Add(border);
         }
 
