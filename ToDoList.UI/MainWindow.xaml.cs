@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace ToDoList.UI
 {
@@ -10,7 +11,6 @@ namespace ToDoList.UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        Library.ToDoList list = new Library.ToDoList();
 
         string connectionString =
            "Server=(localdb)\\mssqllocaldb;Database=ToDoList;Trusted_Connection=True;MultipleActiveResultSets=true;";
@@ -36,7 +36,15 @@ namespace ToDoList.UI
                     SqlDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        ToDoListBox.Items.Add(new Label { Content = $"Id: {reader[0]}\tName: {reader[1]}\tCompleted: {((bool)reader[3])}" });
+                        var item = new ToDoItem
+                        {
+                            Name = reader["Name"].ToString(),
+                            Completed = (bool)reader["Completed"],
+                            Description = reader["Description"].ToString(),
+                            Priority = Priority.Zero
+                        };
+
+                        NewToDoItem(item);
                     }
                     reader.Close();
                 }
@@ -47,9 +55,50 @@ namespace ToDoList.UI
             }
         }
 
+        public void NewToDoItem(ToDoItem item)
+        {
+            Border border = new Border
+            {
+                BorderThickness = new Thickness(4),
+                BorderBrush = Brushes.Black
+            };
+            var stackPanel = new StackPanel
+            {
+                Width = ToDoListBox.Width*.85,
+                Height = 120
+            };
+            Label labelName = new Label
+            {
+                Content = item.Name,
+                FontSize = 23
+            };
+
+            Label labelContent = new Label
+            {
+                 Content = item.Description,
+                 FontSize = 16
+            };
+            CheckBox checkBox = new CheckBox
+            {
+                IsChecked = false
+            };
+            Label labelPriority = new Label
+            {
+                Content = $"Priority: {item.Priority}"
+            };
+
+            border.Child = stackPanel;
+            stackPanel.Children.Add(labelName);
+            if(!string.IsNullOrEmpty (item.Description) && !string.IsNullOrWhiteSpace(item.Description))
+                stackPanel.Children.Add(labelContent);
+            stackPanel.Children.Add(labelPriority);
+            stackPanel.Children.Add(checkBox);
+
+            ToDoListBox.Items.Add(border);
+        }
+
         private void NewBtn_Click(object sender, RoutedEventArgs e)
         {
-            list.Add(new Library.ToDoItem { Name = "Item" });
         }
 
         private void RemoveBtn_Click(object sender, RoutedEventArgs e)
