@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ToDoList.UI
 {
@@ -20,9 +10,51 @@ namespace ToDoList.UI
     /// </summary>
     public partial class MainWindow : Window
     {
+        Library.ToDoList list = new Library.ToDoList();
+
+        string connectionString =
+           "Server=(localdb)\\mssqllocaldb;Database=ToDoList;Trusted_Connection=True;MultipleActiveResultSets=true;";
+
+
         public MainWindow()
         {
             InitializeComponent();
+            ReadData();
+        }
+
+        public void ReadData()
+        {
+            string queryString = "SELECT * FROM ToDoItems";
+            using (SqlConnection connection =
+            new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+
+                try
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ToDoListBox.Items.Add(new Label { Content = $"Id: {reader[0]}\tName: {reader[1]}\tCompleted: {((bool)reader[3])}" });
+                    }
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        private void NewBtn_Click(object sender, RoutedEventArgs e)
+        {
+            list.Add(new Library.ToDoItem { Name = "Item" });
+        }
+
+        private void RemoveBtn_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
