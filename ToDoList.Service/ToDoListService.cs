@@ -24,7 +24,7 @@ namespace ToDoList.Service
         {
             string query = $"SELECT * FROM {builder.DataSource}";
             var items = new List<ToDoItem>();
-            using (var connection = new SqlConnection(query))
+            using (var connection = new SqlConnection(builder.ConnectionString))
             {
                 var command = new SqlCommand(query, connection);
                 try
@@ -55,9 +55,24 @@ namespace ToDoList.Service
             }
         }
 
-        public void PostItem()
+        public void PostItem(ToDoItem item)
         {
-            throw new NotImplementedException();
+            string query =
+                $"INSERT INTO {builder.DataSource} (Name, Description, Completed, Priority) VALUES ({item.Name}, {item.Description}, 0, {(int)item.Priority});";
+
+            using (var connection = new SqlConnection(builder.ConnectionString))
+            {
+                var command = new SqlCommand(query, connection);
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
         }
 
         public void RemoveItem(int id)
