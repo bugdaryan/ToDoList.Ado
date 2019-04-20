@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,7 +12,7 @@ namespace ToDoList.UI
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        Dictionary<Border, int> borderToId = new Dictionary<Border, int>();
         string connectionString =
            "Server=(localdb)\\mssqllocaldb;Database=ToDoList;Trusted_Connection=True;MultipleActiveResultSets=true;";
 
@@ -24,6 +25,7 @@ namespace ToDoList.UI
 
         public void ReadData()
         {
+            ToDoListBox.Items.Clear();
             string queryString = "SELECT * FROM ToDoItems ORDER BY Priority DESC";
             using (SqlConnection connection =
             new SqlConnection(connectionString))
@@ -41,7 +43,9 @@ namespace ToDoList.UI
                             Name = reader["Name"].ToString(),
                             Completed = (bool)reader["Completed"],
                             Description = reader["Description"].ToString(),
-                            Priority = (Priority)reader["priority"]
+                            Priority = (Priority)reader["priority"],
+                            Id = (int)reader["Id"],
+                            Created = (DateTime)reader["Created"]
                         };
 
                         NewToDoItem(item);
@@ -58,6 +62,25 @@ namespace ToDoList.UI
         public void WriteData()
         {
             string queryString = $"INSERT INTO ToDoItems (Name, Description, Completed, Priority) VALUES ('{NewItem.Name}', '{NewItem.Description}', 0, {(int)NewItem.Priority});";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        public void RemoveToDoItem(int id)
+        {
+            string queryString = $"DELETE FROM ToDoItems WHERE Id = {id};";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
@@ -103,7 +126,8 @@ namespace ToDoList.UI
             };
             CheckBox checkBox = new CheckBox
             {
-                IsChecked = false
+                IsChecked = false,
+                Content = "Is completed? "
             };
             Label labelPriority = new Label
             {
@@ -119,7 +143,7 @@ namespace ToDoList.UI
 
             stackPanel.Children.Add(labelPriority);
             stackPanel.Children.Add(checkBox);
-
+            borderToId.Add(border, item.Id);
             ToDoListBox.Items.Add(border);
         }
 
@@ -141,7 +165,9 @@ namespace ToDoList.UI
 
         private void RemoveBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            int id = borderToId[(Border)ToDoListBox.SelectedItem];
+            RemoveToDoItem(id);
+            ReadData();
         }
     }
 }

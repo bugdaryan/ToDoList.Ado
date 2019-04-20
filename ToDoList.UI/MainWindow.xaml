@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
         <ListBox x:Name="ToDoListBox" HorizontalAlignment="Left" Height="452" Margin="10,59,0,0" VerticalAlignment="Top" Width="350" Grid.ColumnSpan="2"/>
         <Button x:Name="NewBtn" Content="New" HorizontalAlignment="Left" Margin="41.709,67,0,0" VerticalAlignment="Top" Width="113" IsDefault="True" Click="NewBtn_Click" Grid.Column="1"/>
-        <Button x:Name="RemoveBtn" Content="Remove" HorizontalAlignment="Left" Margin="41.709,91,0,0" VerticalAlignment="Top" Width="113" IsEnabled="False" Click="RemoveBtn_Click" Grid.Column="1"/>
+        <Button x:Name="RemoveBtn" Content="Remove" HorizontalAlignment="Left" Margin="41.709,91,0,0" VerticalAlignment="Top" Width="113" Click="RemoveBtn_Click" Grid.Column="1"/>
         <Label Content="ToDos" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.394,0.308" Height="44" Width="78" FontSize="24"/>
     </Grid>
 </Window>
