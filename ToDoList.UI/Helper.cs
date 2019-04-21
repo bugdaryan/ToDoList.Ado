@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -13,6 +14,8 @@ namespace ToDoList.UI
         static Dictionary<Border, int> borderToId = new Dictionary<Border, int>();
         static Dictionary<CheckBox, int> checkBoxToId = new Dictionary<CheckBox, int>();
         static Dictionary<CheckBox, StackPanel> checkBoxToStackPanel = new Dictionary<CheckBox, StackPanel>();
+
+        public static Button RemoveCompletedBtn { get; set; }
 
         static readonly Service _service;
 
@@ -39,6 +42,12 @@ namespace ToDoList.UI
         {
             int id = borderToId[border];
             _service.RemoveItem(id);
+            RefreshList();
+        }
+
+        public static void RemoveCompletedItems()
+        {
+            _service.RemoveCompletedItems();
             RefreshList();
         }
 
@@ -82,18 +91,25 @@ namespace ToDoList.UI
             {
                 var c = (CheckBox)sender;
                 var id = checkBoxToId[c];
+                ToDoList.First(todo => todo.Id == id).Completed = true;
                 _service.ChangeItemCompletetion(id, true);
                 c.Content = "Completed";
                 checkBoxToStackPanel[c].Background = Brushes.ForestGreen;
+                RemoveCompletedBtn.IsEnabled = true;
             };
 
             checkBox.Unchecked += (sender, e) =>
             {
                 var c = (CheckBox)sender;
                 var id = checkBoxToId[c];
+                ToDoList.First(todo => todo.Id == id).Completed = false;
                 _service.ChangeItemCompletetion(id, false);
                 c.Content = "Not completed";
                 checkBoxToStackPanel[c].Background = Brushes.CadetBlue;
+                if(!ToDoList.Any(todo => todo.Completed))
+                {
+                    RemoveCompletedBtn.IsEnabled = false;
+                }
             };
 
             border.Child = stackPanel;

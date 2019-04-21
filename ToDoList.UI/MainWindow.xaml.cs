@@ -24,11 +24,12 @@ namespace ToDoList.UI
 
             ToDoListBox.LostFocus += (sender, e) =>
              {
-                 if (!RemoveBtn.IsMouseOver)
+                 if (!RemoveBtn.IsMouseOver || ToDoListBox.SelectedItem == null)
                  {
                      RemoveBtn.IsEnabled = false;
                  }
              };
+            Helper.RemoveCompletedBtn = this.RemoveCompletedBtn;
         }
 
         public void NewToDoItem(ToDoItem item)
@@ -67,6 +68,13 @@ namespace ToDoList.UI
             {
                 ToDoListBox.Items.Add(Helper.GetNewToDoItemBorder(item, ToDoListBox.Width));
             }
+        }
+
+        private void RemoveCompletedBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Helper.RemoveCompletedItems();
+            RefreshList();
+            ((Button)sender).IsEnabled = false;
         }
     }
 }

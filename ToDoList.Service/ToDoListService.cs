@@ -135,5 +135,25 @@ namespace ToDoList.Service
                 }
             }
         }
+
+        public void RemoveCompletedItems()
+        {
+            string query =
+                $"DELETE FROM ToDoItems Where Completed = 1";
+            using (var connection = new SqlConnection(_builder.ConnectionString))
+            {
+                var command = new SqlCommand(query, connection);
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+        }
     }
 }

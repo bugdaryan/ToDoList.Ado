@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using ToDoList.Data;
 using ToDoList.Data.Models;
 
@@ -30,6 +26,11 @@ namespace ToDoList.UI
         public void RemoveItem(int id)
         {
             _toDoListService.RemoveItem(id);
+        }
+
+        public void RemoveCompletedItems()
+        {
+            _toDoListService.RemoveCompletedItems();
         }
 
         public void ChangeItemCompletetion(int id, bool completed)
