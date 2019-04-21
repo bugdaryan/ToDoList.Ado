@@ -19,7 +19,8 @@ namespace ToDoList.UI
 
             ToDoListBox.GotFocus += (sender, e) =>
              {
-                 RemoveBtn.IsEnabled = true;
+                 if(ToDoListBox.SelectedItem != null)
+                    RemoveBtn.IsEnabled = true;
              };
 
             ToDoListBox.LostFocus += (sender, e) =>
@@ -57,6 +58,11 @@ namespace ToDoList.UI
 
         private void RemoveBtn_Click(object sender, RoutedEventArgs e)
         {
+            if(ToDoListBox.SelectedItem == null)
+            {
+                MessageBox.Show("Please select item to remove it");
+                return;
+            }
             Helper.RemoveItem((Border)ToDoListBox.SelectedItem);
             RefreshList();
         }
@@ -67,6 +73,10 @@ namespace ToDoList.UI
             foreach (var item in Helper.ToDoList)
             {
                 ToDoListBox.Items.Add(Helper.GetNewToDoItemBorder(item, ToDoListBox.Width));
+                if(item.Completed)
+                {
+                    RemoveCompletedBtn.IsEnabled = true;
+                }
             }
         }
 

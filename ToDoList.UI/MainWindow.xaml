@@ -14,7 +14,7 @@
         <ListBox x:Name="ToDoListBox" HorizontalAlignment="Left" Height="452" Margin="10,59,0,0" VerticalAlignment="Top" Width="350" Grid.ColumnSpan="2"/>
         <Button x:Name="NewBtn" Content="New" HorizontalAlignment="Left" Margin="10.2,59,0,0" VerticalAlignment="Top" Width="159" IsDefault="True" Click="NewBtn_Click" Grid.Column="1" Height="27"/>
         <Button x:Name="RemoveBtn" Content="Remove" HorizontalAlignment="Left" Margin="10.2,91,0,0" VerticalAlignment="Top" Width="159" Click="RemoveBtn_Click" Grid.Column="1" IsEnabled="False" Height="34"/>
-        <Button x:Name="RemoveCompletedBtn" Content="Remove Completed items" HorizontalAlignment="Left" Margin="10.2,130,0,0" VerticalAlignment="Top" Width="159"  Grid.Column="1"  Height="33" Click="RemoveCompletedBtn_Click"/>
+        <Button x:Name="RemoveCompletedBtn" Content="Remove Completed items" HorizontalAlignment="Left" Margin="10.2,130,0,0" VerticalAlignment="Top" Width="159"  Grid.Column="1"  Height="33" Click="RemoveCompletedBtn_Click" IsEnabled="False"/>
         <Label Content="ToDos" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.394,0.308" Height="44" Width="78" FontSize="24"/>
     </Grid>
 </Window>
