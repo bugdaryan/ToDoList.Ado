@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using ToDoList.Data.Models;
+using ToDoList.Service;
 
 namespace ToDoList.UI
 {
@@ -11,17 +13,33 @@ namespace ToDoList.UI
         static Dictionary<Border, int> borderToId = new Dictionary<Border, int>();
         static Dictionary<CheckBox, int> checkBoxToId = new Dictionary<CheckBox, int>();
 
-        public static void OnNewButtonClick(object sender, RoutedEventArgs e)
+        static readonly Service _service;
+
+        public static IEnumerable<ToDoItem> ToDoList { get; private set; }
+
+        static Helper()
         {
-           
+            var toDoService = new ToDoListService(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
+            _service = new Service(toDoService);
         }
 
-        public static void OnRemoveButtonClick(object sender, RoutedEventArgs e)
+        public static void AddItem(ToDoItem item)
         {
-           
+            _service.PostItem(item);
+            RefreshList();
         }
 
-        
+        private static void RefreshList()
+        {
+            ToDoList = _service.GetAll();
+        }
+
+        public static void RemoveItem(Border border)
+        {
+            int id = borderToId[border];
+            _service.RemoveItem(id);
+            RefreshList();
+        }
 
         public static Border GetNewToDoItemBorder(ToDoItem item, double width)
         {
@@ -61,16 +79,20 @@ namespace ToDoList.UI
 
             checkBox.Checked += (sender, e) =>
             {
-                var id = checkBoxToId[(CheckBox)sender];
-                //ChangeItemCompletetion(id, true);
-                //ReadData();
+                var c = (CheckBox)sender;
+                var id = checkBoxToId[c];
+                _service.ChangeItemCompletetion(id, true);
+                c.Content = "Completed";
+                c.Background = Brushes.ForestGreen;
             };
 
             checkBox.Unchecked += (sender, e) =>
             {
-                var id = checkBoxToId[(CheckBox)sender];
-                //ChangeItemCompletetion(id, false);
-                //ReadData();
+                var c = (CheckBox)sender;
+                var id = checkBoxToId[c];
+                _service.ChangeItemCompletetion(id, false);
+                c.Content = "Not completed";
+                c.Background = Brushes.CadetBlue;
             };
 
             border.Child = stackPanel;
@@ -87,7 +109,6 @@ namespace ToDoList.UI
             stackPanel.Children.Add(grid);
             borderToId.Add(border, item.Id);
             checkBoxToId.Add(checkBox, item.Id);
-
 
             return border;
         }
