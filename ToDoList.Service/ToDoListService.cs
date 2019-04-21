@@ -8,23 +8,37 @@ namespace ToDoList.Service
 {
     public class ToDoListService : IToDoList
     {
-        SqlConnectionStringBuilder builder;
+        readonly SqlConnectionStringBuilder _builder;
+
 
         public ToDoListService(string connection)
         {
-            builder = new SqlConnectionStringBuilder(connection);
+            _builder = new SqlConnectionStringBuilder(connection);
         }
 
         public void ChangeItemCompletetion(int id, bool completed)
         {
-            throw new NotImplementedException();
+            string query = $"UPDATE ToDoItems SET Completed={(completed ? 1 : 0)} WHERE Id = {id}";
+            using (var connection = new SqlConnection(_builder.ConnectionString))
+            {
+                var command = new SqlCommand(query, connection);
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
         }
 
         public IEnumerable<ToDoItem> GetAll()
         {
-            string query = $"SELECT * FROM {builder.DataSource}";
+            string query = $"SELECT * FROM ToDoItems";
             var items = new List<ToDoItem>();
-            using (var connection = new SqlConnection(builder.ConnectionString))
+            using (var connection = new SqlConnection(_builder.ConnectionString))
             {
                 var command = new SqlCommand(query, connection);
                 try
@@ -58,9 +72,9 @@ namespace ToDoList.Service
         public void PostItem(ToDoItem item)
         {
             string query =
-                $"INSERT INTO {builder.DataSource} (Name, Description, Completed, Priority) VALUES ({item.Name}, {item.Description}, 0, {(int)item.Priority});";
+                $"INSERT INTO ToDoItems (Name, Description, Completed, Priority) VALUES ({item.Name}, {item.Description}, 0, {(int)item.Priority})";
 
-            using (var connection = new SqlConnection(builder.ConnectionString))
+            using (var connection = new SqlConnection(_builder.ConnectionString))
             {
                 var command = new SqlCommand(query, connection);
                 try
@@ -77,7 +91,22 @@ namespace ToDoList.Service
 
         public void RemoveItem(int id)
         {
-            throw new NotImplementedException();
+            string query =
+             $"DELETE FROM ToDoItems WHERE Id = {id}";
+
+            using (var connection = new SqlConnection(_builder.ConnectionString))
+            {
+                var command = new SqlCommand(query, connection);
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
         }
     }
 }
