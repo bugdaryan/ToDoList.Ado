@@ -12,6 +12,7 @@ namespace ToDoList.UI
     {
         static Dictionary<Border, int> borderToId = new Dictionary<Border, int>();
         static Dictionary<CheckBox, int> checkBoxToId = new Dictionary<CheckBox, int>();
+        static Dictionary<CheckBox, StackPanel> checkBoxToStackPanel = new Dictionary<CheckBox, StackPanel>();
 
         static readonly Service _service;
 
@@ -29,7 +30,7 @@ namespace ToDoList.UI
             RefreshList();
         }
 
-        private static void RefreshList()
+        public static void RefreshList()
         {
             ToDoList = _service.GetAll();
         }
@@ -83,7 +84,7 @@ namespace ToDoList.UI
                 var id = checkBoxToId[c];
                 _service.ChangeItemCompletetion(id, true);
                 c.Content = "Completed";
-                c.Background = Brushes.ForestGreen;
+                checkBoxToStackPanel[c].Background = Brushes.ForestGreen;
             };
 
             checkBox.Unchecked += (sender, e) =>
@@ -92,7 +93,7 @@ namespace ToDoList.UI
                 var id = checkBoxToId[c];
                 _service.ChangeItemCompletetion(id, false);
                 c.Content = "Not completed";
-                c.Background = Brushes.CadetBlue;
+                checkBoxToStackPanel[c].Background = Brushes.CadetBlue;
             };
 
             border.Child = stackPanel;
@@ -107,8 +108,10 @@ namespace ToDoList.UI
             grid.Children.Add(checkBox);
 
             stackPanel.Children.Add(grid);
+
             borderToId.Add(border, item.Id);
             checkBoxToId.Add(checkBox, item.Id);
+            checkBoxToStackPanel.Add(checkBox, stackPanel);   
 
             return border;
         }

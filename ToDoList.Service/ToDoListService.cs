@@ -36,7 +36,7 @@ namespace ToDoList.Service
 
         public IEnumerable<ToDoItem> GetAll()
         {
-            string query = $"SELECT * FROM ToDoItems";
+            string query = $"SELECT * FROM ToDoItems ORDER BY Priority DESC";
             var items = new List<ToDoItem>();
             using (var connection = new SqlConnection(_builder.ConnectionString))
             {
@@ -72,7 +72,7 @@ namespace ToDoList.Service
         public void PostItem(ToDoItem item)
         {
             string query =
-                $"INSERT INTO ToDoItems (Name, Description, Completed, Priority) VALUES ({item.Name}, {item.Description}, 0, {(int)item.Priority})";
+                $"INSERT INTO ToDoItems (Name, Description, Completed, Priority) VALUES ('{item.Name}', '{item.Description}', 0, {(int)item.Priority})";
 
             using (var connection = new SqlConnection(_builder.ConnectionString))
             {
