@@ -40,8 +40,8 @@ namespace ToDoList.UI
         private void NewBtn_Click(object sender, RoutedEventArgs e)
         {
             NewItemWindow newItemWindow = new NewItemWindow();
-            newItemWindow.Show();
-            newItemWindow.Closing += (s, ev) =>
+            newItemWindow.Owner = App.Current.MainWindow;
+            if (newItemWindow.ShowDialog().Value)
             {
                 if (newItemWindow.ToDoItem != null)
                 {
@@ -50,12 +50,12 @@ namespace ToDoList.UI
                     Helper.AddItem(item);
                     RefreshList();
                 }
-            };
+            }
         }
 
         private void RemoveBtn_Click(object sender, RoutedEventArgs e)
         {
-            Helper.RemoveItem((Border)sender);
+            Helper.RemoveItem((Border)ToDoListBox.SelectedItem);
             RefreshList();
         }
 

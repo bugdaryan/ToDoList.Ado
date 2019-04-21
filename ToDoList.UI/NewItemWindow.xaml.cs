@@ -18,6 +18,7 @@ namespace ToDoList.UI
 
         private void CancelBtn_Click(object sender, RoutedEventArgs e)
         {
+            DialogResult = false;
             Close();
         }
 
@@ -33,6 +34,7 @@ namespace ToDoList.UI
                     Name = NewTodoNameTextBox.Text,
                     Priority = GetToDoPriority()
                 };
+                DialogResult = true;
                 Close();
             }
             else
