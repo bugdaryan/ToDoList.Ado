@@ -123,69 +123,7 @@ namespace ToDoList.UI
 
         public void NewToDoItem(ToDoItem item)
         {
-            var isDescNull = string.IsNullOrEmpty(item.Description) || string.IsNullOrWhiteSpace(item.Description);
-            Border border = new Border
-            {
-                BorderThickness = new Thickness(4),
-                BorderBrush = Brushes.Black
-            };
-            var stackPanel = new StackPanel
-            {
-                Width = ToDoListBox.Width * .85,
-                Height = isDescNull ? 70 : 90,
-                Background = item.Completed ? Brushes.ForestGreen : Brushes.CadetBlue
-            };
-            Label labelName = new Label
-            {
-                Content = item.Name,
-                FontSize = 20
-            };
-
-            Label labelContent = new Label
-            {
-                Content = item.Description,
-                FontSize = 12
-            };
-            CheckBox checkBox = new CheckBox
-            {
-                IsChecked = item.Completed,
-                Content = item.Completed ? "Completed" : "Not completed"
-            };
-            Label labelPriority = new Label
-            {
-                Content = $"Priority: {item.Priority}",
-                HorizontalAlignment = HorizontalAlignment.Right
-            };
-
-            checkBox.Checked += (sender, e) =>
-            {
-                var id = checkBoxToId[(CheckBox)sender];
-                ChangeItemCompletetion(id, true);
-                ReadData();
-            };
-
-            checkBox.Unchecked += (sender, e) =>
-            {
-                var id = checkBoxToId[(CheckBox)sender];
-                ChangeItemCompletetion(id, false);
-                ReadData();
-            };
-
-            border.Child = stackPanel;
-            stackPanel.Children.Add(labelName);
-            if (!isDescNull)
-            {
-                stackPanel.Children.Add(labelContent);
-            }
-            var grid = new Grid();
-            grid.Children.Add(labelPriority);
-            grid.Children.Add(checkBox);
-
-            //stackPanel.Children.Add(labelPriority);
-            //stackPanel.Children.Add(checkBox);
-            stackPanel.Children.Add(grid);
-            borderToId.Add(border, item.Id);
-            checkBoxToId.Add(checkBox, item.Id);
+            Border border = Helper.GetNewToDoItemBorder(item, ToDoListBox.Width);
             ToDoListBox.Items.Add(border);
         }
 
