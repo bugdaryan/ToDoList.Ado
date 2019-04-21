@@ -9,17 +9,20 @@ namespace ToDoList.Service
     public class ToDoListService : IToDoList
     {
         readonly SqlConnectionStringBuilder _builder;
+        private readonly string _tableName;
+        private readonly string _schemaName;
 
-
-        public ToDoListService(string connection)
+        public ToDoListService(string connection, string schemaName, string tableName)
         {
             _builder = new SqlConnectionStringBuilder(connection);
+            _schemaName = schemaName;
+            _tableName = tableName;
             EnsureDatabaseCreated();
         }
 
         public void ChangeItemCompletetion(int id, bool completed)
         {
-            string query = $"UPDATE ToDoItems SET Completed={(completed ? 1 : 0)} WHERE Id = {id}";
+            string query = $"UPDATE {_builder.InitialCatalog}.{_schemaName}.{_tableName} SET Completed={(completed ? 1 : 0)} WHERE Id = {id}";
             using (var connection = new SqlConnection(_builder.ConnectionString))
             {
                 var command = new SqlCommand(query, connection);
@@ -38,7 +41,7 @@ namespace ToDoList.Service
 
         public IEnumerable<ToDoItem> GetAll()
         {
-            string query = $"SELECT * FROM ToDoItems ORDER BY Priority DESC";
+            string query = $"SELECT * FROM {_builder.InitialCatalog}.{_schemaName}.{_tableName} ORDER BY Priority DESC";
             var items = new List<ToDoItem>();
             using (var connection = new SqlConnection(_builder.ConnectionString))
             {
@@ -73,7 +76,7 @@ namespace ToDoList.Service
 
         private void EnsureDatabaseCreated()
         {
-            string query = "SELECT database_id FROM sys.databases WHERE Name='ToDoList'";
+            string query = $"SELECT database_id FROM sys.databases WHERE Name='{_builder.InitialCatalog}'";
             using (var connection = new SqlConnection(_builder.ConnectionString))
             {
                 var command = new SqlCommand(query, connection);
@@ -83,7 +86,19 @@ namespace ToDoList.Service
                     var result = command.ExecuteScalar();
                     if(result == null)
                     {
-                        //TODO: create database
+                        query = $"CREATE DATABASE {_builder.InitialCatalog}";
+                        command = new SqlCommand(query, connection);
+                        command.ExecuteNonQuery();
+                        query = $@"CREATE TABLE {_builder.InitialCatalog}.{_schemaName}.{_tableName}(
+                            [Id] [int] IDENTITY NOT NULL,
+                            [Name] [nvarchar](50) NOT NULL,
+                            [Completed] [bit] NULL DEFAULT 0,
+                            [Priority] [int] NULL DEFAULT 0,
+                            [Created] [datetime2] NULL DEFAULT GETDATE(),
+                            [Description] [nvarchar](200) NULL
+                                )";
+                        command = new SqlCommand(query, connection);
+                        command.ExecuteNonQuery();
                     }
                 }
                 catch (Exception e)
@@ -97,7 +112,7 @@ namespace ToDoList.Service
         public void PostItem(ToDoItem item)
         {
             string query =
-                $"INSERT INTO ToDoItems (Name, Description, Completed, Priority) VALUES ('{item.Name}', '{item.Description}', 0, {(int)item.Priority})";
+                $"INSERT INTO {_builder.InitialCatalog}.{_schemaName}.{_tableName} (Name, Description, Completed, Priority) VALUES ('{item.Name}', '{item.Description}', 0, {(int)item.Priority})";
 
             using (var connection = new SqlConnection(_builder.ConnectionString))
             {
@@ -118,7 +133,7 @@ namespace ToDoList.Service
         public void RemoveItem(int id)
         {
             string query =
-             $"DELETE FROM ToDoItems WHERE Id = {id}";
+             $"DELETE FROM {_builder.InitialCatalog}.{_schemaName}.{_tableName} WHERE Id = {id}";
 
             using (var connection = new SqlConnection(_builder.ConnectionString))
             {
@@ -139,7 +154,7 @@ namespace ToDoList.Service
         public void RemoveCompletedItems()
         {
             string query =
-                $"DELETE FROM ToDoItems Where Completed = 1";
+                $"DELETE FROM {_builder.InitialCatalog}.{_schemaName}.{_tableName} Where Completed = 1";
             using (var connection = new SqlConnection(_builder.ConnectionString))
             {
                 var command = new SqlCommand(query, connection);

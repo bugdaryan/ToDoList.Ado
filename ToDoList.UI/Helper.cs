@@ -23,7 +23,7 @@ namespace ToDoList.UI
 
         static Helper()
         {
-            var toDoService = new ToDoListService(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
+            var toDoService = new ToDoListService(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString, "dbo", "ToDoItems");
             _service = new Service(toDoService);
         }
 
