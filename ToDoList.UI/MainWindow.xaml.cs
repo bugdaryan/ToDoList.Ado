@@ -40,7 +40,8 @@ namespace ToDoList.UI
         private void NewBtn_Click(object sender, RoutedEventArgs e)
         {
             NewItemWindow newItemWindow = new NewItemWindow();
-            newItemWindow.Owner = App.Current.MainWindow;
+            newItemWindow.Title = "Add new ToDo item";
+            newItemWindow.Owner = Application.Current.MainWindow;
             if (newItemWindow.ShowDialog().Value)
             {
                 if (newItemWindow.ToDoItem != null)

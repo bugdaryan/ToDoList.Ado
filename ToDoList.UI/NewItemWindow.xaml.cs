@@ -39,7 +39,7 @@ namespace ToDoList.UI
             }
             else
             {
-                //TriggerInvalidInput();
+                invalidNameLbl.Visibility = Visibility.Visible;
             }
 
         }
@@ -76,6 +76,14 @@ namespace ToDoList.UI
                 return false;
             }
             return true;
+        }
+
+        private void NewTodoNameTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (invalidNameLbl.Visibility == Visibility.Visible)
+            {
+                invalidNameLbl.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }
