@@ -14,6 +14,7 @@ namespace ToDoList.Service
         public ToDoListService(string connection)
         {
             _builder = new SqlConnectionStringBuilder(connection);
+            EnsureDatabaseCreated();
         }
 
         public void ChangeItemCompletetion(int id, bool completed)
@@ -27,8 +28,9 @@ namespace ToDoList.Service
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.WriteLine(e.Message);
                     throw;
                 }
             }
@@ -60,12 +62,35 @@ namespace ToDoList.Service
                     }
                     reader.Close();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-
+                    Console.WriteLine(e.Message);
                     throw;
                 }
                 return items;
+            }
+        }
+
+        private void EnsureDatabaseCreated()
+        {
+            string query = "SELECT database_id FROM sys.databases WHERE Name='ToDoList'";
+            using (var connection = new SqlConnection(_builder.ConnectionString))
+            {
+                var command = new SqlCommand(query, connection);
+                try
+                {
+                    connection.Open();
+                    var result = command.ExecuteScalar();
+                    if(result == null)
+                    {
+                        //TODO: create database
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    throw;
+                }
             }
         }
 
@@ -82,8 +107,9 @@ namespace ToDoList.Service
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.WriteLine(e.Message);
                     throw;
                 }
             }
@@ -102,8 +128,9 @@ namespace ToDoList.Service
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.WriteLine(e.Message);
                     throw;
                 }
             }
