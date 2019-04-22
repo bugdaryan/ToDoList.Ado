@@ -39,6 +39,7 @@ namespace ToDoList.UI
                  }
              };
             Helper.RemoveCompletedBtn = this.RemoveCompletedBtn;
+            RemoveAllBtn.IsEnabled = !ToDoListBox.Items.IsEmpty;
         }
 
         public void NewToDoItem(ToDoItem item)
@@ -59,6 +60,7 @@ namespace ToDoList.UI
                     var item = newItemWindow.ToDoItem;
 
                     Helper.AddItem(item);
+                    RemoveAllBtn.IsEnabled = true;
                     RefreshList();
                 }
             }
@@ -75,6 +77,10 @@ namespace ToDoList.UI
             }
             Helper.RemoveItem((Border)ToDoListBox.SelectedItem);
             RefreshList();
+            if(ToDoListBox.Items.IsEmpty)
+            {
+                RemoveAllBtn.IsEnabled = false;
+            }
         }
 
         private void RefreshList()
@@ -95,6 +101,10 @@ namespace ToDoList.UI
             Helper.RemoveCompletedItems();
             RefreshList();
             ((Button)sender).IsEnabled = false;
+            if(ToDoListBox.Items.IsEmpty)
+            {
+                RemoveAllBtn.IsEnabled = false;
+            }
         }
 
         private void ModifyBtn_Click(object sender, RoutedEventArgs e)
@@ -122,6 +132,22 @@ namespace ToDoList.UI
                         RefreshList();
                     }
                 }
+            }
+        }
+
+        private void RemoveAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if(ToDoListBox.Items.IsEmpty)
+            {
+                MessageBox.Show("It looks like there are no items to delete");
+                return;
+            }
+            var dlgResult = MessageBox.Show("Do you want to remove all items?", "Oh no...", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if(dlgResult == MessageBoxResult.Yes)
+            {
+                Helper.RemovaAllItems();
+                RefreshList();
+                RemoveAllBtn.IsEnabled = false;
             }
         }
     }
