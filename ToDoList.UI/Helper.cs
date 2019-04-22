@@ -37,7 +37,7 @@ namespace ToDoList.UI
 
         public static void RefreshList()
         {
-            ToDoList = _service.GetAll();
+            ToDoList = _service.GetAll(_sortBy, _sortOrder);
         }
 
         public static void RemoveItem(Border border)
@@ -155,30 +155,33 @@ namespace ToDoList.UI
         public static void SetSortOrder(string sortQuery)
         {
             GetSortOrder(sortQuery);
-            bool orderByAsc = _sortOrder == SortOrder.ASC;
-            switch (_sortBy)
+            if (ToDoList.Count != 0)
             {
-                case SortBy.Created:
-                    ToDoList = (orderByAsc ?
-                        ToDoList.OrderBy(item => item.Created).ToList()
-                        : ToDoList.OrderByDescending(item => item.Created).ToList());
-                    break;
-                case SortBy.Name:
-                    ToDoList = (orderByAsc ?
-                        ToDoList.OrderBy(item => item.Name).ToList()
-                        : ToDoList.OrderByDescending(item => item.Name).ToList());
-                    break;
-                case SortBy.Priority:
-                    ToDoList = (orderByAsc ?
-                        ToDoList.OrderBy(item => item.Priority).ToList()
-                        : ToDoList.OrderByDescending(item => item.Priority).ToList());
-                    break;
-                default:
-                    break;
+                bool orderByAsc = _sortOrder == SortOrder.ASC;
+                switch (_sortBy)
+                {
+                    case SortBy.Created:
+                        ToDoList = (orderByAsc ?
+                            ToDoList.OrderBy(item => item.Created).ToList()
+                            : ToDoList.OrderByDescending(item => item.Created).ToList());
+                        break;
+                    case SortBy.Name:
+                        ToDoList = (orderByAsc ?
+                            ToDoList.OrderBy(item => item.Name).ToList()
+                            : ToDoList.OrderByDescending(item => item.Name).ToList());
+                        break;
+                    case SortBy.Priority:
+                        ToDoList = (orderByAsc ?
+                            ToDoList.OrderBy(item => item.Priority).ToList()
+                            : ToDoList.OrderByDescending(item => item.Priority).ToList());
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
-        private static void GetSortOrder(string sortQuery)
+        public static void GetSortOrder(string sortQuery)
         {
             switch (sortQuery)
             {
@@ -207,6 +210,6 @@ namespace ToDoList.UI
                     _sortBy = SortBy.Name;
                     break;
             }
-        }    
-    }        
-}            
+        }
+    }
+}

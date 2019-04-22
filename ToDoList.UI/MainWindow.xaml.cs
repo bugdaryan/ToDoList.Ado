@@ -12,6 +12,8 @@ namespace ToDoList.UI
         public MainWindow()
         {
             InitializeComponent();
+
+            Helper.GetSortOrder(((ComboBoxItem)OrderByComboBox.SelectedItem).Content.ToString());
             Helper.RefreshList();
             RefreshList();
 
@@ -158,9 +160,14 @@ namespace ToDoList.UI
         {
             if (!ToDoListBox.Items.IsEmpty)
             {
-                Helper.SetSortOrder(((ComboBoxItem)OrderByComboBox.SelectedValue).Content.ToString());
-                RefreshList();
+                SetSortOrder();
             }
+        }
+
+        private void SetSortOrder()
+        {
+            Helper.SetSortOrder(((ComboBoxItem)OrderByComboBox.SelectedValue).Content.ToString());
+            RefreshList();
         }
     }
 }

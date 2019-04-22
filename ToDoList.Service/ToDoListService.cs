@@ -27,9 +27,9 @@ namespace ToDoList.Service
             ExecuteNonQuery(query);
         }
 
-        public IList<ToDoItem> GetAll()
+        public IList<ToDoItem> GetAll(string sortQuery)
         {
-            string query = $"SELECT * FROM {_builder.InitialCatalog}.{_schemaName}.{_tableName} ORDER BY Priority DESC";
+            string query = $"SELECT * FROM {_builder.InitialCatalog}.{_schemaName}.{_tableName} {sortQuery}";
             var items = new List<ToDoItem>();
             using (var connection = new SqlConnection(_builder.ConnectionString))
             {
@@ -45,7 +45,7 @@ namespace ToDoList.Service
                             Name = reader["Name"].ToString(),
                             Description = reader["Description"].ToString(),
                             Completed = (bool)reader["Completed"],
-                            Created = DateTime.Now,
+                            Created = (DateTime)reader["Created"],
                             Id = (int)reader["Id"],
                             Priority = (Priority)reader["Priority"]
                         };

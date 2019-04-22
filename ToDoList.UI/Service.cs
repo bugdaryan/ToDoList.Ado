@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToDoList.Data;
+using ToDoList.Data.Enums;
 using ToDoList.Data.Models;
 
 namespace ToDoList.UI
@@ -13,9 +14,15 @@ namespace ToDoList.UI
             _toDoListService = toDoListService;
         }
 
-        public IList<ToDoItem> GetAll()
+        public IList<ToDoItem> GetAll(SortBy sortBy, SortOrder sortOrder)
         {
-            return _toDoListService.GetAll();
+            string sortQuery = $"ORDER BY {sortBy} {sortOrder}";
+            if (sortBy == SortBy.None)
+            {
+                sortQuery = "";
+            }
+
+            return _toDoListService.GetAll(sortQuery);
         }
 
         public void PostItem(ToDoItem item)
