@@ -36,6 +36,7 @@ namespace ToDoList.UI
             {
                var newItem = new ToDoItem
                 {
+                    Id = ToDoItem.Id,
                     Completed = ToDoItem.Completed,
                     Created = ToDoItem.Created,
                     Description = ModifyTodoDescriptionTextBox.Text,
@@ -62,9 +63,9 @@ namespace ToDoList.UI
 
         private bool CheckIfItemChanged(ToDoItem newItem)
         {
-            return newItem.Name == ToDoItem.Name
-                && newItem.Description == ToDoItem.Description
-                && newItem.Priority == ToDoItem.Priority;
+            return newItem.Name != ToDoItem.Name
+                || newItem.Description != ToDoItem.Description
+                || newItem.Priority != ToDoItem.Priority;
                 
         }
 
