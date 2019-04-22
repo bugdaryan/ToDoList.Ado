@@ -148,6 +148,9 @@ namespace ToDoList.UI
                 Helper.RemovaAllItems();
                 RefreshList();
                 RemoveAllBtn.IsEnabled = false;
+                ModifyBtn.IsEnabled = false;
+                RemoveBtn.IsEnabled = false;
+                RemoveCompletedBtn.IsEnabled = false;
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using ToDoList.Data.Enums;
 using ToDoList.Data.Models;
 
 namespace ToDoList.UI
@@ -14,6 +15,7 @@ namespace ToDoList.UI
         {
             InitializeComponent();
             ZeroPriorityRadioButton.IsChecked = true;
+            NewTodoNameTextBox.Focus();
         }
 
         private void CancelBtn_Click(object sender, RoutedEventArgs e)

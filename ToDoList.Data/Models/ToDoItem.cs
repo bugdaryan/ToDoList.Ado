@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ToDoList.Data.Enums;
 
 namespace ToDoList.Data.Models
 {
@@ -14,14 +11,5 @@ namespace ToDoList.Data.Models
         public Priority Priority { get; set; }
         public DateTime Created { get; set; }
         public bool Completed { get; set; }
-    }
-
-    public enum Priority
-    {
-        Zero,
-        Low,
-        Medium,
-        Important,
-        Critical
     }
 }

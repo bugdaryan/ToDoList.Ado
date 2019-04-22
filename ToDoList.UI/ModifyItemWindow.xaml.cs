@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using ToDoList.Data.Enums;
 using ToDoList.Data.Models;
 
 namespace ToDoList.UI

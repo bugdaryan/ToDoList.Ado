@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using ToDoList.Data;
+using ToDoList.Data.Enums;
 using ToDoList.Data.Models;
 
 namespace ToDoList.Service
@@ -23,20 +24,7 @@ namespace ToDoList.Service
         public void ChangeItemCompletetion(int id, bool completed)
         {
             string query = $"UPDATE {_builder.InitialCatalog}.{_schemaName}.{_tableName} SET Completed={(completed ? 1 : 0)} WHERE Id = {id}";
-            using (var connection = new SqlConnection(_builder.ConnectionString))
-            {
-                var command = new SqlCommand(query, connection);
-                try
-                {
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                    throw;
-                }
-            }
+            ExecuteNonQuery(query);
         }
 
         public IList<ToDoItem> GetAll()

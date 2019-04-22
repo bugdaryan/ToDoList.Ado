@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\SortOrder.cs" />
+    <Compile Include="Enums\OrderBy.cs" />
+    <Compile Include="Enums\Priority.cs" />
     <Compile Include="IToDoList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\ToDoItem.cs" />
