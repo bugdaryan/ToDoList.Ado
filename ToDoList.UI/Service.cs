@@ -13,7 +13,7 @@ namespace ToDoList.UI
             _toDoListService = toDoListService;
         }
 
-        public IEnumerable<ToDoItem> GetAll()
+        public IList<ToDoItem> GetAll()
         {
             return _toDoListService.GetAll();
         }
@@ -36,6 +36,11 @@ namespace ToDoList.UI
         public void RemoveCompletedItems()
         {
             _toDoListService.RemoveCompletedItems();
+        }
+
+        public void RemoveAllItems()
+        {
+            _toDoListService.RemoveAllItems();
         }
 
         public void ChangeItemCompletetion(int id, bool completed)

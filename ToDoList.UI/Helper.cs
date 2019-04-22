@@ -19,7 +19,7 @@ namespace ToDoList.UI
 
         static readonly Service _service;
 
-        public static IEnumerable<ToDoItem> ToDoList { get; private set; }
+        public static IList<ToDoItem> ToDoList { get; private set; }
 
         static Helper()
         {
@@ -61,6 +61,12 @@ namespace ToDoList.UI
         {
             _service.RemoveCompletedItems();
             RefreshList();
+        }
+
+        public static void RemovaAllItems()
+        {
+            _service.RemoveAllItems();
+            ToDoList.Clear();
         }
 
         public static Border GetNewToDoItemBorder(ToDoItem item, double width)

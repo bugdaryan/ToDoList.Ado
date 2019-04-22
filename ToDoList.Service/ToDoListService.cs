@@ -39,7 +39,7 @@ namespace ToDoList.Service
             }
         }
 
-        public IEnumerable<ToDoItem> GetAll()
+        public IList<ToDoItem> GetAll()
         {
             string query = $"SELECT * FROM {_builder.InitialCatalog}.{_schemaName}.{_tableName} ORDER BY Priority DESC";
             var items = new List<ToDoItem>();

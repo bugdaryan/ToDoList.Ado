@@ -9,7 +9,7 @@ namespace ToDoList.Data
 {
     public interface IToDoList
     {
-        IEnumerable<ToDoItem> GetAll();
+        IList<ToDoItem> GetAll();
         void PostItem(ToDoItem item);
         void ModifyItem(ToDoItem item);
         void RemoveItem(int id);
