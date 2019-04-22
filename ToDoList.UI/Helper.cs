@@ -45,6 +45,18 @@ namespace ToDoList.UI
             RefreshList();
         }
 
+        public static ToDoItem GetItemByBorder(Border border)
+        {
+            int id = borderToId[border];
+            return ToDoList.FirstOrDefault(item => item.Id == id);
+        }
+
+        public static void ModifyItem(ToDoItem item)
+        {
+            _service.ModifyItem(item);
+            RefreshList();
+        }
+
         public static void RemoveCompletedItems()
         {
             _service.RemoveCompletedItems();
@@ -106,7 +118,7 @@ namespace ToDoList.UI
                 _service.ChangeItemCompletetion(id, false);
                 c.Content = "Not completed";
                 checkBoxToStackPanel[c].Background = Brushes.CadetBlue;
-                if(!ToDoList.Any(todo => todo.Completed))
+                if (!ToDoList.Any(todo => todo.Completed))
                 {
                     RemoveCompletedBtn.IsEnabled = false;
                 }
@@ -127,7 +139,7 @@ namespace ToDoList.UI
 
             borderToId.Add(border, item.Id);
             checkBoxToId.Add(checkBox, item.Id);
-            checkBoxToStackPanel.Add(checkBox, stackPanel);   
+            checkBoxToStackPanel.Add(checkBox, stackPanel);
 
             return border;
         }

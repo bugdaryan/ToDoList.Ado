@@ -23,6 +23,11 @@ namespace ToDoList.UI
             _toDoListService.PostItem(item);
         }
 
+        public void ModifyItem(ToDoItem item)
+        {
+            _toDoListService.ModifyItem(item);
+        }
+
         public void RemoveItem(int id)
         {
             _toDoListService.RemoveItem(id);
