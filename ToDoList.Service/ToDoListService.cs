@@ -130,6 +130,30 @@ namespace ToDoList.Service
             }
         }
 
+        public void ModifyItem(ToDoItem item)
+        {
+            string query =
+                $@"UPDATE {_builder.InitialCatalog}.{_schemaName}.{_tableName} 
+                    SET [Name] = '{item.Name}', 
+                        [Description] = '{item.Description}', 
+                        [Priority] = {(int)item.Priority}
+                    WHERE Id = {item.Id}";
+            using (var connection = new SqlConnection(_builder.ConnectionString))
+            {
+                var command = new SqlCommand(query, connection);
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+        }
+
         public void RemoveItem(int id)
         {
             string query =

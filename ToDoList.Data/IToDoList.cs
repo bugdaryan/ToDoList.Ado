@@ -11,6 +11,7 @@ namespace ToDoList.Data
     {
         IEnumerable<ToDoItem> GetAll();
         void PostItem(ToDoItem item);
+        void ModifyItem(ToDoItem item);
         void RemoveItem(int id);
         void RemoveCompletedItems();
         void ChangeItemCompletetion(int id, bool completed);
