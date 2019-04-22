@@ -152,31 +152,61 @@ namespace ToDoList.UI
             return border;
         }
 
-        public static void SetSortOrder(SortBy sortBy, SortOrder sortOrder)
+        public static void SetSortOrder(string sortQuery)
         {
-            _sortOrder = sortOrder;
+            GetSortOrder(sortQuery);
             bool orderByAsc = _sortOrder == SortOrder.ASC;
-            _sortBy = sortBy;
-            switch (sortBy)
+            switch (_sortBy)
             {
                 case SortBy.Created:
                     ToDoList = (orderByAsc ?
-                        ToDoList.OrderBy(item => item.Created).ToList() 
+                        ToDoList.OrderBy(item => item.Created).ToList()
                         : ToDoList.OrderByDescending(item => item.Created).ToList());
                     break;
                 case SortBy.Name:
                     ToDoList = (orderByAsc ?
-                        ToDoList.OrderBy(item => item.Name).ToList() 
+                        ToDoList.OrderBy(item => item.Name).ToList()
                         : ToDoList.OrderByDescending(item => item.Name).ToList());
                     break;
                 case SortBy.Priority:
                     ToDoList = (orderByAsc ?
-                        ToDoList.OrderBy(item => item.Priority).ToList() 
+                        ToDoList.OrderBy(item => item.Priority).ToList()
                         : ToDoList.OrderByDescending(item => item.Priority).ToList());
                     break;
                 default:
                     break;
             }
         }
-    }
-}
+
+        private static void GetSortOrder(string sortQuery)
+        {
+            switch (sortQuery)
+            {
+                case "Created ascending":
+                    _sortOrder = SortOrder.ASC;
+                    _sortBy = SortBy.Created;
+                    break;
+                case "Created descending":
+                    _sortOrder = SortOrder.DESC;
+                    _sortBy = SortBy.Created;
+                    break;
+                case "Priority ascending":
+                    _sortOrder = SortOrder.ASC;
+                    _sortBy = SortBy.Priority;
+                    break;
+                case "Priority descending":
+                    _sortOrder = SortOrder.DESC;
+                    _sortBy = SortBy.Priority;
+                    break;
+                case "Name ascending":
+                    _sortOrder = SortOrder.ASC;
+                    _sortBy = SortBy.Name;
+                    break;
+                case "Name descending":
+                    _sortOrder = SortOrder.DESC;
+                    _sortBy = SortBy.Name;
+                    break;
+            }
+        }    
+    }        
+}            

@@ -19,18 +19,14 @@
         <Button x:Name="RemoveCompletedBtn" Content="Remove Completed Items" HorizontalAlignment="Left" Margin="10.2,169,0,0" VerticalAlignment="Top" Width="159"  Grid.Column="1"  Height="33" Click="RemoveCompletedBtn_Click" IsEnabled="False"/>
         <Button x:Name="RemoveAllBtn" Content="Remove All Items" HorizontalAlignment="Left" Margin="10,207,0,0" VerticalAlignment="Top" Width="159"  Grid.Column="1"  Height="33" Click="RemoveAllBtn_Click" IsEnabled="False"/>
         <Label Content="ToDos" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.394,0.308" Height="44" Width="78" FontSize="24"/>
-        <ComboBox x:Name="OrderByComboBox" HorizontalAlignment="Left" Margin="234,32,0,0" VerticalAlignment="Top" Width="70" SelectedIndex="2" SelectionChanged="OrderByComboBox_SelectionChanged">
-            <Enums:SortBy>None</Enums:SortBy>
-            <Enums:SortBy>Priority</Enums:SortBy>
-            <Enums:SortBy>Created</Enums:SortBy>
-            <Enums:SortBy>Name</Enums:SortBy>
+        <ComboBox x:Name="OrderByComboBox" HorizontalAlignment="Left" Margin="212,29,0,0" VerticalAlignment="Top" Width="142" SelectedIndex="0" SelectionChanged="OrderByComboBox_SelectionChanged">
+            <ComboBoxItem Content="Created ascending"/>
+            <ComboBoxItem Content="Created descending"/>
+            <ComboBoxItem Content="Priority ascending"/>
+            <ComboBoxItem Content="Priority descending"/>
+            <ComboBoxItem Content="Name ascending"/>
+            <ComboBoxItem Content="Name descending"/>
         </ComboBox>
-        <ComboBox x:Name="SortOrderComboBox" HorizontalAlignment="Left" Margin="309,32,0,0" VerticalAlignment="Top" Width="51" SelectedIndex="0" SelectionChanged="SortOrderComboBox_SelectionChanged">
-            <ComboBox.DataContext>
-                <Enums:SortOrder>ASC</Enums:SortOrder>
-            </ComboBox.DataContext>
-            <Enums:SortOrder>ASC</Enums:SortOrder>
-            <Enums:SortOrder>DESC</Enums:SortOrder>
-        </ComboBox>
+        <Label Content="Order by" HorizontalAlignment="Left" Margin="155,27,0,0" VerticalAlignment="Top" Height="27"/>
     </Grid>
 </Window>

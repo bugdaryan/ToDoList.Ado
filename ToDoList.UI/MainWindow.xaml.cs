@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using ToDoList.Data.Enums;
 using ToDoList.Data.Models;
 
 namespace ToDoList.UI
@@ -155,21 +154,13 @@ namespace ToDoList.UI
             }
         }
 
-        private void ChangeItemsSortOrder()
-        {
-            var a = SortOrderComboBox;
-            Helper.SetSortOrder((SortBy)OrderByComboBox.SelectedItem, (SortOrder)SortOrderComboBox.SelectedItem);
-            RefreshList();
-        }
-
         private void OrderByComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ChangeItemsSortOrder();
-        }
-
-        private void SortOrderComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ChangeItemsSortOrder();
+            if (!ToDoListBox.Items.IsEmpty)
+            {
+                Helper.SetSortOrder(((ComboBoxItem)OrderByComboBox.SelectedValue).Content.ToString());
+                RefreshList();
+            }
         }
     }
 }
