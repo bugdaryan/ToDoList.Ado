@@ -14,6 +14,7 @@ namespace ToDoList.Data
         void ModifyItem(ToDoItem item);
         void RemoveItem(int id);
         void RemoveCompletedItems();
+        void RemoveAllItems();
         void ChangeItemCompletetion(int id, bool completed);
     }
 }

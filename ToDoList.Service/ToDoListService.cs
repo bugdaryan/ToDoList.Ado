@@ -84,7 +84,7 @@ namespace ToDoList.Service
                 {
                     connection.Open();
                     var result = command.ExecuteScalar();
-                    if(result == null)
+                    if (result == null)
                     {
                         query = $"CREATE DATABASE {_builder.InitialCatalog}";
                         command = new SqlCommand(query, connection);
@@ -113,21 +113,7 @@ namespace ToDoList.Service
         {
             string query =
                 $"INSERT INTO {_builder.InitialCatalog}.{_schemaName}.{_tableName} (Name, Description, Completed, Priority) VALUES ('{item.Name}', '{item.Description}', 0, {(int)item.Priority})";
-
-            using (var connection = new SqlConnection(_builder.ConnectionString))
-            {
-                var command = new SqlCommand(query, connection);
-                try
-                {
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                    throw;
-                }
-            }
+            ExecuteNonQuery(query);
         }
 
         public void ModifyItem(ToDoItem item)
@@ -138,27 +124,32 @@ namespace ToDoList.Service
                         [Description] = '{item.Description}', 
                         [Priority] = {(int)item.Priority}
                     WHERE Id = {item.Id}";
-            using (var connection = new SqlConnection(_builder.ConnectionString))
-            {
-                var command = new SqlCommand(query, connection);
-                try
-                {
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-            }
+            ExecuteNonQuery(query);
         }
 
         public void RemoveItem(int id)
         {
             string query =
              $"DELETE FROM {_builder.InitialCatalog}.{_schemaName}.{_tableName} WHERE Id = {id}";
+            ExecuteNonQuery(query);
+        }
 
+        public void RemoveCompletedItems()
+        {
+            string query =
+                $"DELETE FROM {_builder.InitialCatalog}.{_schemaName}.{_tableName} Where Completed = 1";
+            ExecuteNonQuery(query);
+        }
+
+        public void RemoveAllItems()
+        {
+            string query =
+                $"DELETE FROM {_builder.InitialCatalog}.{_schemaName}.{_tableName}";
+            ExecuteNonQuery(query);
+        }
+
+        private void ExecuteNonQuery(string query)
+        {
             using (var connection = new SqlConnection(_builder.ConnectionString))
             {
                 var command = new SqlCommand(query, connection);
@@ -170,26 +161,6 @@ namespace ToDoList.Service
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
-                    throw;
-                }
-            }
-        }
-
-        public void RemoveCompletedItems()
-        {
-            string query =
-                $"DELETE FROM {_builder.InitialCatalog}.{_schemaName}.{_tableName} Where Completed = 1";
-            using (var connection = new SqlConnection(_builder.ConnectionString))
-            {
-                var command = new SqlCommand(query, connection);
-                try
-                {
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-                catch (Exception)
-                {
-
                     throw;
                 }
             }
