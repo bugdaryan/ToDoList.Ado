@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using ToDoList.Data.Enums;
 using ToDoList.Data.Models;
 using ToDoList.Service;
 
@@ -11,10 +12,11 @@ namespace ToDoList.UI
 {
     static public class Helper
     {
-        static Dictionary<Border, int> borderToId = new Dictionary<Border, int>();
-        static Dictionary<CheckBox, int> checkBoxToId = new Dictionary<CheckBox, int>();
-        static Dictionary<CheckBox, StackPanel> checkBoxToStackPanel = new Dictionary<CheckBox, StackPanel>();
-
+        static Dictionary<Border, int> _borderToId = new Dictionary<Border, int>();
+        static Dictionary<CheckBox, int> _checkBoxToId = new Dictionary<CheckBox, int>();
+        static Dictionary<CheckBox, StackPanel> _checkBoxToStackPanel = new Dictionary<CheckBox, StackPanel>();
+        static SortBy _sortBy = SortBy.None;
+        static SortOrder _sortOrder = SortOrder.ASC;
         public static Button RemoveCompletedBtn { get; set; }
 
         static readonly Service _service;
@@ -40,14 +42,14 @@ namespace ToDoList.UI
 
         public static void RemoveItem(Border border)
         {
-            int id = borderToId[border];
+            int id = _borderToId[border];
             _service.RemoveItem(id);
             RefreshList();
         }
 
         public static ToDoItem GetItemByBorder(Border border)
         {
-            int id = borderToId[border];
+            int id = _borderToId[border];
             return ToDoList.FirstOrDefault(item => item.Id == id);
         }
 
@@ -108,22 +110,22 @@ namespace ToDoList.UI
             checkBox.Checked += (sender, e) =>
             {
                 var c = (CheckBox)sender;
-                var id = checkBoxToId[c];
+                var id = _checkBoxToId[c];
                 ToDoList.First(todo => todo.Id == id).Completed = true;
                 _service.ChangeItemCompletetion(id, true);
                 c.Content = "Completed";
-                checkBoxToStackPanel[c].Background = Brushes.ForestGreen;
+                _checkBoxToStackPanel[c].Background = Brushes.ForestGreen;
                 RemoveCompletedBtn.IsEnabled = true;
             };
 
             checkBox.Unchecked += (sender, e) =>
             {
                 var c = (CheckBox)sender;
-                var id = checkBoxToId[c];
+                var id = _checkBoxToId[c];
                 ToDoList.First(todo => todo.Id == id).Completed = false;
                 _service.ChangeItemCompletetion(id, false);
                 c.Content = "Not completed";
-                checkBoxToStackPanel[c].Background = Brushes.CadetBlue;
+                _checkBoxToStackPanel[c].Background = Brushes.CadetBlue;
                 if (!ToDoList.Any(todo => todo.Completed))
                 {
                     RemoveCompletedBtn.IsEnabled = false;
@@ -143,11 +145,38 @@ namespace ToDoList.UI
 
             stackPanel.Children.Add(grid);
 
-            borderToId.Add(border, item.Id);
-            checkBoxToId.Add(checkBox, item.Id);
-            checkBoxToStackPanel.Add(checkBox, stackPanel);
+            _borderToId.Add(border, item.Id);
+            _checkBoxToId.Add(checkBox, item.Id);
+            _checkBoxToStackPanel.Add(checkBox, stackPanel);
 
             return border;
+        }
+
+        public static void SetSortOrder(SortBy sortBy, SortOrder sortOrder)
+        {
+            _sortOrder = sortOrder;
+            bool orderByAsc = _sortOrder == SortOrder.ASC;
+            _sortBy = sortBy;
+            switch (sortBy)
+            {
+                case SortBy.Created:
+                    ToDoList = (orderByAsc ?
+                        ToDoList.OrderBy(item => item.Created).ToList() 
+                        : ToDoList.OrderByDescending(item => item.Created).ToList());
+                    break;
+                case SortBy.Name:
+                    ToDoList = (orderByAsc ?
+                        ToDoList.OrderBy(item => item.Name).ToList() 
+                        : ToDoList.OrderByDescending(item => item.Name).ToList());
+                    break;
+                case SortBy.Priority:
+                    ToDoList = (orderByAsc ?
+                        ToDoList.OrderBy(item => item.Priority).ToList() 
+                        : ToDoList.OrderByDescending(item => item.Priority).ToList());
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

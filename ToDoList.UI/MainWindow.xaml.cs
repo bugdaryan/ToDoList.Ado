@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using ToDoList.Data.Enums;
 using ToDoList.Data.Models;
 
 namespace ToDoList.UI
@@ -77,7 +78,7 @@ namespace ToDoList.UI
             }
             Helper.RemoveItem((Border)ToDoListBox.SelectedItem);
             RefreshList();
-            if(ToDoListBox.Items.IsEmpty)
+            if (ToDoListBox.Items.IsEmpty)
             {
                 RemoveAllBtn.IsEnabled = false;
             }
@@ -101,7 +102,7 @@ namespace ToDoList.UI
             Helper.RemoveCompletedItems();
             RefreshList();
             ((Button)sender).IsEnabled = false;
-            if(ToDoListBox.Items.IsEmpty)
+            if (ToDoListBox.Items.IsEmpty)
             {
                 RemoveAllBtn.IsEnabled = false;
             }
@@ -137,13 +138,13 @@ namespace ToDoList.UI
 
         private void RemoveAllBtn_Click(object sender, RoutedEventArgs e)
         {
-            if(ToDoListBox.Items.IsEmpty)
+            if (ToDoListBox.Items.IsEmpty)
             {
                 MessageBox.Show("It looks like there are no items to delete");
                 return;
             }
             var dlgResult = MessageBox.Show("Do you want to remove all items?", "Oh no...", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            if(dlgResult == MessageBoxResult.Yes)
+            if (dlgResult == MessageBoxResult.Yes)
             {
                 Helper.RemovaAllItems();
                 RefreshList();
@@ -152,6 +153,23 @@ namespace ToDoList.UI
                 RemoveBtn.IsEnabled = false;
                 RemoveCompletedBtn.IsEnabled = false;
             }
+        }
+
+        private void ChangeItemsSortOrder()
+        {
+            var a = SortOrderComboBox;
+            Helper.SetSortOrder((SortBy)OrderByComboBox.SelectedItem, (SortOrder)SortOrderComboBox.SelectedItem);
+            RefreshList();
+        }
+
+        private void OrderByComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ChangeItemsSortOrder();
+        }
+
+        private void SortOrderComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ChangeItemsSortOrder();
         }
     }
 }

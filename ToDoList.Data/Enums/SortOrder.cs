@@ -1,6 +1,6 @@
 ﻿namespace ToDoList.Data.Enums
 {
-    public enum SordOrder
+    public enum SortOrder
     {
         ASC,
         DESC

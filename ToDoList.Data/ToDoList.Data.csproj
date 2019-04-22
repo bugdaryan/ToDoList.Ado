@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\SortOrder.cs" />
-    <Compile Include="Enums\OrderBy.cs" />
+    <Compile Include="Enums\SortBy.cs" />
     <Compile Include="Enums\Priority.cs" />
     <Compile Include="IToDoList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
