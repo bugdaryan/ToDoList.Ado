@@ -87,13 +87,16 @@ namespace ToDoList.UI
 
         private void RefreshList()
         {
-            ToDoListBox.Items.Clear();
-            foreach (var item in Helper.ToDoList)
+            if (Helper.ToDoList != null)
             {
-                ToDoListBox.Items.Add(Helper.GetNewToDoItemBorder(item, ToDoListBox.Width));
-                if (item.Completed)
+                ToDoListBox.Items.Clear();
+                foreach (var item in Helper.ToDoList)
                 {
-                    RemoveCompletedBtn.IsEnabled = true;
+                    ToDoListBox.Items.Add(Helper.GetNewToDoItemBorder(item, ToDoListBox.Width));
+                    if (item.Completed)
+                    {
+                        RemoveCompletedBtn.IsEnabled = true;
+                    }
                 }
             }
         }
@@ -111,7 +114,6 @@ namespace ToDoList.UI
 
         private void ModifyBtn_Click(object sender, RoutedEventArgs e)
         {
-
             if (ToDoListBox.SelectedItem == null)
             {
                 MessageBox.Show("Please select item to modify it");
@@ -167,6 +169,12 @@ namespace ToDoList.UI
         private void SetSortOrder()
         {
             Helper.SetSortOrder(((ComboBoxItem)OrderByComboBox.SelectedValue).Content.ToString());
+            RefreshList();
+        }
+
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Helper.SetSearchQuery(SearchBox.Text);
             RefreshList();
         }
     }

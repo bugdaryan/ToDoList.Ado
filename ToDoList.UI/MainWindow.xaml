@@ -28,5 +28,6 @@
             <ComboBoxItem Content="Name descending"/>
         </ComboBox>
         <Label Content="Order by" HorizontalAlignment="Left" Margin="155,27,0,0" VerticalAlignment="Top" Height="27"/>
+        <TextBox x:Name="SearchBox" Grid.Column="1" HorizontalAlignment="Left" Height="22" Margin="10,29,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="159" TextChanged="SearchBox_TextChanged"/>
     </Grid>
 </Window>

@@ -17,6 +17,7 @@ namespace ToDoList.UI
         static Dictionary<CheckBox, StackPanel> _checkBoxToStackPanel = new Dictionary<CheckBox, StackPanel>();
         static SortBy _sortBy = SortBy.None;
         static SortOrder _sortOrder = SortOrder.ASC;
+        static string _searchQuery;
         public static Button RemoveCompletedBtn { get; set; }
 
         static readonly Service _service;
@@ -37,7 +38,24 @@ namespace ToDoList.UI
 
         public static void RefreshList()
         {
-            ToDoList = _service.GetAll(_sortBy, _sortOrder);
+            var list = _service.GetAll(_sortBy, _sortOrder);
+            if (string.IsNullOrEmpty(_searchQuery) || string.IsNullOrWhiteSpace(_searchQuery))
+            {
+                ToDoList = list;
+            }
+            else
+            {
+                ToDoList = list
+                    .Where(item => 
+                        item.Name.ToLower().Contains(_searchQuery) 
+                        || item.Description.ToLower().Contains(_searchQuery)).ToList();
+            }
+        }
+
+        public static void SetSearchQuery(string searchQuery)
+        {
+            _searchQuery = searchQuery.ToLower();
+            RefreshList();
         }
 
         public static void RemoveItem(Border border)
