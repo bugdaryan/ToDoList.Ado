@@ -26,7 +26,7 @@ namespace ToDoList.UI
 
         static Helper()
         {
-            var toDoService = new ToDoListService(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString, "dbo", "ToDoItems");
+            var toDoService = new ToDoListService(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString, "ToDoList", "dbo", "ToDoItems");
             _service = new Service(toDoService);
         }
 
@@ -46,8 +46,8 @@ namespace ToDoList.UI
             else
             {
                 ToDoList = list
-                    .Where(item => 
-                        item.Name.ToLower().Contains(_searchQuery) 
+                    .Where(item =>
+                        item.Name.ToLower().Contains(_searchQuery)
                         || item.Description.ToLower().Contains(_searchQuery)).ToList();
             }
         }
@@ -55,7 +55,6 @@ namespace ToDoList.UI
         public static void SetSearchQuery(string searchQuery)
         {
             _searchQuery = searchQuery.ToLower();
-            RefreshList();
         }
 
         public static void RemoveItem(Border border)
